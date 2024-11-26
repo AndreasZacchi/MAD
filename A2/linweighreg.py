@@ -10,8 +10,9 @@ class LinearRegression():
     Linear regression implementation.
     """
 
-    def __init__(self):
-        
+    def __init__(self, alpha=None, lambdaVal=0):
+        self.alpha = alpha
+        self.lambdaVal = lambdaVal
         pass
             
     def fit(self, X, t):
@@ -22,6 +23,7 @@ class LinearRegression():
         ----------
         X : Array of shape [n_samples, n_features]
         t : Array of shape [n_samples, 1]
+        alpha : Array of shape [n_samples, 1], optional
         """        
 
         # Ensure the arrays are N-dimensional numpy arrays
@@ -32,9 +34,18 @@ class LinearRegression():
         oneCol = numpy.ones((X.shape[0], 1))
         X = numpy.concatenate((oneCol, X), axis=1)
 
+        # If no alpha is provided use the identity matrix to not affect the result
+        if self.alpha is None:
+            A = numpy.identity(X.shape[0])
+        # Otherwise use it
+        else:
+            self.alpha = numpy.array(alpha).reshape((len(self.alpha), 1))
+            A = numpy.diag(self.alpha.flatten())
+
+
         # calculate the weights using the formula from the lecture
-        firstPart = X.T @ X
-        secondPart = X.T @ t
+        firstPart = ((X.T @ A) @ X)
+        secondPart = (X.T @ A) @ t
         self.w = numpy.linalg.inv(firstPart) @ secondPart
 
     def predict(self, X):

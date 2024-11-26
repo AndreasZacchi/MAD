@@ -1,6 +1,6 @@
 import numpy
 import pandas
-import linreg
+import linweighreg as linreg
 import matplotlib.pyplot as plt
 
 # load data
@@ -16,12 +16,12 @@ print("Number of test instances: %i" % X_test.shape[0])
 print("Number of features: %i" % X_train.shape[1])
 
 # (b) fit linear regression using only the first feature
-model_single = linreg.LinearRegression()
+model_single = linreg.LinearRegression((t_train ** 2))
 model_single.fit(X_train[:,0], t_train)
 print("Weights: %s" % model_single.w)
 
 # (c) fit linear regression model using all features
-model_all = linreg.LinearRegression()
+model_all = linreg.LinearRegression((t_train ** 2))
 model_all.fit(X_train, t_train)
 print("Weights: %s" % model_all.w)
 

@@ -1,5 +1,5 @@
 import numpy
-import matplotlib.pyplot as plot
+import matplotlib.pyplot as plt
 
 # load data
 train_data = numpy.loadtxt("boston_train.csv", delimiter=",")
@@ -19,16 +19,22 @@ print("The mean price of the houses is: %f" % mean_price)
 
 # (b) RMSE function
 def rmse(t, tp):
+    t = t.reshape((len(t), 1))
+    tp = tp.reshape((len(tp), 1))
     return numpy.sqrt(numpy.mean((t - tp) ** 2))
 
+# Create a list of the predicted prices
 prediction = mean_price * numpy.ones(len(t_test))
 print("RMSE using the model (mean): %f" % rmse(prediction, t_test))
 
 # (c) visualization of results
-plot.scatter(t_test, prediction)
-plot.ylim(0, 60)
-plot.xlim(0, 60)
-plot.xlabel("Actual price")
-plot.ylabel("Predicted price")
+plt.figure()
+plt.scatter(t_test, prediction)
+plt.ylim(0, 60)
+plt.xlim(0, 60)
+plt.xlabel("Actual price")
+plt.ylabel("Predicted price")
+plt.title("Mean price - RMSE: %f" % rmse(prediction, t_test))
 
-plot.show()
+plt.savefig("housing_1.png")
+plt.show()
