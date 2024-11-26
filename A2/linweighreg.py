@@ -39,12 +39,13 @@ class LinearRegression():
             A = numpy.identity(X.shape[0])
         # Otherwise use it
         else:
-            self.alpha = numpy.array(alpha).reshape((len(self.alpha), 1))
+            self.alpha = numpy.array(self.alpha).reshape((len(self.alpha), 1))
             A = numpy.diag(self.alpha.flatten())
 
+        diagLambda = self.lambdaVal * numpy.identity(X.shape[1])
 
         # calculate the weights using the formula from the lecture
-        firstPart = ((X.T @ A) @ X)
+        firstPart = ((X.T @ A) @ X) + diagLambda
         secondPart = (X.T @ A) @ t
         self.w = numpy.linalg.inv(firstPart) @ secondPart
 
