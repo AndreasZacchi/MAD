@@ -30,21 +30,24 @@ n = 9
 gamma = 0.99 # 99 %
 
 # Number of experiments to carry out
-nexp = 20 # TODO: Change this when you have developed your code
+nexp = 10000 # TODO: Change this when you have developed your code
 
 
 counter = 0
 counter_c = 0
 for i in range(nexp):
     x = np.random.normal(mu,sigma,n) # simulates n realizations from a Gaussian with mean mu and var sigma^2
-    sig = sigma # TODO: adapt for b)
+    sig = np.sqrt(np.var(x, ddof=1)) # Use the estimator given in the task
     fac1 = scipy.stats.norm.ppf((1-gamma)/2, 0, 1) # computes the 0.5% quantile of a Gaussian, roughly -2.576  
     fac2 = scipy.stats.norm.ppf((1-gamma)/2 + gamma, 0, 1) # computes the 99.5% quantile of a Gaussian, roughly 2.576   
     xmean = np.mean(x) # Sample mean
     a = xmean - fac2*sig/np.sqrt(n) 
-    b = xmean - fac1*sig/np.sqrt(n) 
-    ac = xmean - fac2*sig/np.sqrt(n) # TODO: adapt for c)
-    bc = xmean - fac1*sig/np.sqrt(n) # TODO: adapt for c)
+    b = xmean - fac1*sig/np.sqrt(n)
+
+    c = scipy.stats.t.ppf((1 + gamma ) / 2, n-1) # computes the critical value for the given gamma with n-1 degrees of freedom
+
+    ac = xmean - c*sig/np.sqrt(n) # TODO: adapt for c)
+    bc = xmean + c*sig/np.sqrt(n) # TODO: adapt for c)
     
     # b) plotting and counting code
     if (a <= mu) & (mu <= b):
@@ -78,15 +81,15 @@ print("c) Not matching in " + str(counter_c) + " (out of " + str(nexp) + ") expe
 if nexp < 1000:
     plt.figure(1)
     plt.plot((mu, mu), (0, nexp), 'b-')
-    plt.xlabel('$\hat{\mu}$')
+    plt.xlabel('$\\hat{\\mu}$')
     plt.ylabel('Number of experiments')
-    plt.title('b) The correct $\mu$ value in blue')
+    plt.title('b) The correct $\\mu$ value in blue')
     
     plt.figure(2)
     plt.plot((mu, mu), (0, nexp), 'b-')
-    plt.xlabel('$\hat{\mu}$')
+    plt.xlabel('$\\hat{\\mu}$')
     plt.ylabel('Number of experiments')
-    plt.title('c) The correct $\mu$ value in blue')
+    plt.title('c) The correct $\\mu$ value in blue')
     plt.show()
 
 
