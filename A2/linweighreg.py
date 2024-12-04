@@ -47,7 +47,8 @@ class LinearRegression():
         # calculate the weights using the formula from the lecture
         firstPart = ((X.T @ A) @ X) + diagLambda
         secondPart = (X.T @ A) @ t
-        self.w = numpy.linalg.inv(firstPart) @ secondPart
+        #self.w = numpy.linalg.inv(firstPart) @ secondPart
+        self.w = numpy.linalg.solve(firstPart, secondPart)
 
     def predict(self, X):
         """

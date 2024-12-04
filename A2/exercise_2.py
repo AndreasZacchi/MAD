@@ -54,6 +54,7 @@ print("Calculated weights for lambda=%.10f: %s" % (bestLambda, model_bestlambda.
 plt.plot(lambdaVals, results)
 plt.xlabel("Lambda")
 plt.ylabel("LOOCV error")
+plt.xscale("log")
 plt.title("LOOCV error with different lambdas for first order polynomial")
 plt.savefig("LOOCV_error_firstorder.png")
 
@@ -63,7 +64,6 @@ print("=== Fourth order polynomial ===")
 X = raw[:, 0]
 X = X.reshape((len(raw), 1))
 X = numpy.concatenate((X, X ** 2, X ** 3, X ** 4), axis=1)
-print(X[0])
 
 # Calculate the loss for each lambda
 results = numpy.array([loocv(X, t, lambdaVal) for lambdaVal in lambdaVals])
@@ -81,6 +81,7 @@ print("Calculated weights for lambda=%.10f: %s" % (bestLambda, model_bestlambda.
 plt.plot(lambdaVals, results)
 plt.xlabel("Lambda")
 plt.ylabel("LOOCV error")
+plt.xscale("log")
 plt.title("LOOCV error with different lambdas for fourth order polynomial")
 plt.savefig("LOOCV_error_fourthorder.png")
 
