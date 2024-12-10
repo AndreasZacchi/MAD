@@ -13,6 +13,7 @@ in pkgs.mkShell {
         python-pkgs.seaborn
         python-pkgs.matplotlib
         python-pkgs.scipy
+        python-pkgs.scikit-learn
     ]))
   ];
 }
