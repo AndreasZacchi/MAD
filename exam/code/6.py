@@ -41,7 +41,11 @@ def calculate_inter_dist(centroids, n_clusters):
             inter_cluster_distance.append(np.linalg.norm(centroids[i] - centroids[j]))
     return inter_cluster_distance
 
+def calculate_var_cluster_size(labels):
+    return np.var(np.bincount(labels))
 
+def calculate_std_cluster_size(labels):
+    return np.std(np.bincount(labels))
 
 centroids_complete = np.array([normalized_data[complete.labels_ == i].mean(axis=0) for i in range(amount_of_clusters)])
 centroids_average = np.array([normalized_data[average.labels_ == i].mean(axis=0) for i in range(amount_of_clusters)])
@@ -59,9 +63,19 @@ inter_dist_complete = calculate_inter_dist(centroids_complete, amount_of_cluster
 inter_dist_average = calculate_inter_dist(centroids_average, amount_of_clusters)
 inter_dist_single = calculate_inter_dist(centroids_single, amount_of_clusters)
 
-avg_cluster_size_complete = np.bincount(complete.labels_)
-avg_cluster_size_average = np.bincount(average.labels_)
-avg_cluster_size_single = np.bincount(single.labels_)
+var_cluster_size_complete = calculate_var_cluster_size(complete.labels_)
+var_cluster_size_average = calculate_var_cluster_size(average.labels_)
+var_cluster_size_single = calculate_var_cluster_size(single.labels_)
+
+std_cluster_size_complete = calculate_std_cluster_size(complete.labels_)
+std_cluster_size_average = calculate_std_cluster_size(average.labels_)
+std_cluster_size_single = calculate_std_cluster_size(single.labels_)
+
+# Normalize the variability in cluster size by the mean
+var_mean = np.mean([var_cluster_size_complete, var_cluster_size_average, var_cluster_size_single])
+var_cluster_size_complete /= var_mean
+var_cluster_size_average /= var_mean
+var_cluster_size_single /= var_mean
 
 print("====================================================")
 print("Complete linkage:")
@@ -69,21 +83,25 @@ print("====================================================")
 print("Avg intra cluster distance:", np.mean(intra_dist_complete))
 print("Avg normalised intra cluster distance:", np.mean(norm_intra_dist_complete))
 print("Inter cluster distance:", np.mean(inter_dist_complete))
-print("Cluster sizes:", avg_cluster_size_complete)
+print("Variability in cluster size divided by the mean:", var_cluster_size_complete )
+print("Standard deviation in cluster size:", std_cluster_size_complete)
 print("====================================================")
 print("Average linkage:")
 print("====================================================")
 print("Avg intra cluster distance:", np.mean(intra_dist_average))
 print("Avg normalised intra cluster distance:", np.mean(norm_intra_dist_average))
 print("Inter cluster distance:", np.mean(inter_dist_average))
-print("Cluster sizes:", avg_cluster_size_average)
+print("Variability in cluster size divided by the mean:", var_cluster_size_average)
+print("Standard deviation in cluster size:", std_cluster_size_average)
 print("====================================================")
 print("Single linkage:")
 print("====================================================")
 print("Avg intra cluster distance:", np.mean(intra_dist_single))
 print("Avg normalised intra cluster distance:", np.mean(norm_intra_dist_single))
 print("Inter cluster distance:", np.mean(inter_dist_single))
-print("Cluster sizes:", avg_cluster_size_single)
+print("Variability in cluster size divided by the mean:", var_cluster_size_single)
+print("Standard deviation in cluster size:", std_cluster_size_single)
+mean = np.mean([std_cluster_size_complete, std_cluster_size_average, std_cluster_size_single])
 
 def plot_clusters(data, labels, centroids, title):
     plt.scatter(data[:,1], data[:,2], c=labels)
