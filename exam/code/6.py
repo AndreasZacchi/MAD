@@ -37,7 +37,7 @@ def calculate_intra_dist(centroids, data, labels, n_clusters, normalize=True):
 def calculate_inter_dist(centroids, n_clusters):
     inter_cluster_distance = []
     for i in range(n_clusters):
-        for j in range(i+1, n_clusters): # i+1 to avoid calculating the same distance twice
+        for j in range(i+1, n_clusters): # i+1 to avoid calculating the same distance twice (i,j) and (j,i)
             inter_cluster_distance.append(np.linalg.norm(centroids[i] - centroids[j]))
     return inter_cluster_distance
 

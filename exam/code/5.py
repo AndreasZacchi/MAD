@@ -1,20 +1,32 @@
-import numpy as np
 import pandas as pd
+import math
 
 data = pd.read_csv('../heart_simplified_RandomForest.csv')
 
+# Helper functions
+def count_occurences(data):
+    count_array = {}
+
+    for occurence in data:
+        if occurence in count_array:
+            count_array[occurence] += 1
+        else:
+            count_array[occurence] = 1
+    return count_array
+
 # Subtask a
 def entropy(data):
-    count = np.bincount(data["HeartDisease"])
+    count = count_occurences(data["HeartDisease"])
     if len(count) < 2: # If there is only one class the leaf is pure
         return 0
-    pos = count[1] / np.sum(count) # Heart disease
-    neg = count[0] / np.sum(count) # No heart disease
     
-    if pos == 0 or neg == 0: # To avoid runtime divide by zero error
-        return 0
+    sum_count = 0
+    for key in count:
+        sum_count += count[key]
+    pos = count[1] / sum_count # Heart disease
+    neg = count[0] / sum_count # No heart disease
     
-    entropy = (-pos) * np.log2(pos) - neg * np.log2(neg)
+    entropy = (-pos) * math.log2(pos) - neg * math.log2(neg)
 
     return entropy
 
@@ -29,14 +41,18 @@ def quality_of_threshold(data, threshold, column_name):
 print("========================================")
 print("Subtask a")
 print("========================================")
-quality_of_threshold(data, np.mean(data["Age"]), "Age")
-quality_of_threshold(data, np.mean(data["RestingBP"]), "RestingBP")
-quality_of_threshold(data, np.mean(data["Cholesterol"]), "Cholesterol")
-quality_of_threshold(data, np.mean(data["MaxHR"]), "MaxHR")
+quality_of_threshold(data, sum(data["Age"]) / len(data["Age"]), "Age")
+quality_of_threshold(data, sum(data["RestingBP"])  / len(data["RestingBP"]), "RestingBP")
+quality_of_threshold(data, sum(data["Cholesterol"])  / len(data["Cholesterol"]), "Cholesterol")
+quality_of_threshold(data, sum(data["MaxHR"])  / len(data["MaxHR"]), "MaxHR")
 
 # Subtask b
 def find_threshold(data, column_name):
-    thresholds = np.unique(data[column_name])
+    thresholds = []
+    for value in data[column_name]:
+        if value not in thresholds:
+            thresholds.append(value)
+
     best_threshold = None
     best_quality = 0
     for threshold in thresholds:
